@@ -16,3 +16,23 @@ fn internal_search<T>(vector: &Vec<T>, target: &T, low: usize, high: usize, iter
         internal_search(vector, target, middle, high, iteration + 1)
     }
 }
+
+pub fn iterative_binary_search<T>(vector: &Vec<T>, target: &T) -> Option<usize> where T: PartialEq, T:  PartialOrd {
+    let mut high: usize = vector.len();
+    let mut low: usize = 0;
+    let mut middle: usize;
+
+    for _ in 0..100 {
+        
+        middle = ((high - low) >> 1) + low;
+        if vector[middle] == *target {
+            return Some(middle);
+        } else if vector[middle] > *target {
+            high = middle;
+        } else {
+            low = middle;
+        }
+    }
+
+    None
+}
