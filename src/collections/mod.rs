@@ -1,20 +1,19 @@
 
 
 pub fn binary_search<T>(vector: &Vec<T>, target: &T) -> Option<usize> where T: PartialEq, T: PartialOrd {
-    internal_search(vector, target, 0, vector.len())
+    internal_search(vector, target, 0, vector.len(), 0)
 } 
 
-fn internal_search<T>(vector: &Vec<T>, target: &T, low: usize, high: usize) -> Option<usize> where T: PartialEq, T: PartialOrd {
+fn internal_search<T>(vector: &Vec<T>, target: &T, low: usize, high: usize, iteration: u32) -> Option<usize> where T: PartialEq, T: PartialOrd {
     let middle: usize = ((high - low) >> 1) + low;
-    
-    if low > middle || middle >= vector.len() {
-        None
-    } else if vector[middle] == *target {
+    if vector[middle] == *target {
         Some(middle)
+    } else if low > high || iteration > 100 {
+        None
     } else if vector[middle] > *target {
-        internal_search(vector, target, low, middle - 1)
+        internal_search(vector, target, low, middle, iteration + 1)
     } else {
-        internal_search(vector, target, middle + 1, high)
+        internal_search(vector, target, middle, high, iteration + 1)
     }
 }
 
@@ -23,19 +22,17 @@ pub fn iterative_binary_search<T>(vector: &Vec<T>, target: &T) -> Option<usize> 
     let mut low: usize = 0;
     let mut middle: usize;
 
-    loop {
+    for _ in 0..100 {
+        
         middle = ((high - low) >> 1) + low;
-        
-        if low > middle || middle >= vector.len() {
-            break None;
-        }
-        
         if vector[middle] == *target {
-            break Some(middle);
+            return Some(middle);
         } else if vector[middle] > *target {
-            high = middle - 1;
+            high = middle;
         } else {
-            low = middle + 1;
+            low = middle;
         }
     }
+
+    None
 }
